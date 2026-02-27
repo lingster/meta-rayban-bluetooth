@@ -15,11 +15,13 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
+from compat import format_address_help
+
 try:
     from bleak import BleakClient, BleakGATTCharacteristic
     from bleak.exc import BleakError
 except ImportError:
-    print("Error: bleak is required. Install with: pip install bleak")
+    print("Error: bleak is required. Install with: uv sync")
     exit(1)
 
 
@@ -148,7 +150,7 @@ class BluetoothMonitor:
         
         while self.running:
             try:
-                line = await asyncio.get_event_loop().run_in_executor(
+                line = await asyncio.get_running_loop().run_in_executor(
                     None, 
                     lambda: input("cmd> ")
                 )
@@ -242,7 +244,7 @@ async def main():
     parser.add_argument(
         "address",
         type=str,
-        help="Bluetooth address of the device"
+        help=format_address_help(),
     )
     parser.add_argument(
         "-d", "--duration",

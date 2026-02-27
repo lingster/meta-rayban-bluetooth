@@ -16,11 +16,13 @@ from typing import Optional, Dict, List, Any, Tuple
 from datetime import datetime
 from pathlib import Path
 
+from compat import format_address_help
+
 try:
-    from bleak import BleakClient, BleakGATTCharacteristic, BleakGATTService
+    from bleak import BleakClient, BleakGATTCharacteristic
     from bleak.exc import BleakError
 except ImportError:
-    print("Error: bleak is required. Install with: pip install bleak")
+    print("Error: bleak is required. Install with: uv sync")
     exit(1)
 
 
@@ -410,7 +412,7 @@ async def main():
     parser.add_argument(
         "address",
         type=str,
-        help="Bluetooth address of the device (XX:XX:XX:XX:XX:XX)"
+        help=format_address_help(),
     )
     parser.add_argument(
         "-v", "--verbose",

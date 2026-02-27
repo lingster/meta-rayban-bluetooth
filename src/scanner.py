@@ -13,11 +13,13 @@ from dataclasses import dataclass
 from typing import Optional, Dict, List, Any
 from datetime import datetime
 
+from compat import address_type_label, is_macos, warn_classic_unsupported
+
 try:
     from bleak import BleakScanner, BLEDevice, AdvertisementData
     from bleak.backends.device import BLEDevice
 except ImportError:
-    print("Error: bleak is required. Install with: pip install bleak")
+    print("Error: bleak is required. Install with: uv sync")
     exit(1)
 
 # Known Meta/Facebook Bluetooth Company IDs
@@ -220,20 +222,26 @@ class MetaRayBanScanner:
         print(f"   Total devices seen: {len(self.devices)}")
         print(f"   Meta devices: {sum(1 for d in self.devices.values() if d.is_meta_device)}")
         print(f"   Ray-Ban devices: {len(self.found_rayban)}")
-        
+        if is_macos():
+            print(f"\n   ℹ️  On macOS, device addresses are CoreBluetooth UUIDs,")
+            print(f"      not hardware MAC addresses.")
+
         return self.found_rayban
     
     async def scan_classic(self) -> List[Dict[str, Any]]:
         """
         Scan for Classic Bluetooth devices (requires pybluez)
         """
+        if warn_classic_unsupported():
+            return []
+
         try:
             import bluetooth
         except ImportError:
             print("⚠️  pybluez not installed. Classic Bluetooth scan unavailable.")
-            print("   Install with: pip install pybluez")
+            print("   Install with: uv add pybluez")
             return []
-        
+
         print("🔍 Scanning for Classic Bluetooth devices...")
         
         try:

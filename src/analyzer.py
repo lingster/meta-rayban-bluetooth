@@ -313,7 +313,7 @@ def create_sample_capture():
     return filepath
 
 
-async def main():
+def main():
     parser = argparse.ArgumentParser(
         description="Analyze Bluetooth packets from Meta Ray-Ban glasses"
     )
@@ -333,23 +333,23 @@ async def main():
         type=str,
         help="Output analysis results to JSON file"
     )
-    
+
     args = parser.parse_args()
-    
+
     analyzer = ProtocolAnalyzer()
-    
+
     if args.sample:
         filepath = create_sample_capture()
         analyzer.load_json(filepath)
     elif args.input:
         analyzer.load_json(args.input)
     else:
-        print("Usage: python analyzer.py <capture.json>")
-        print("       python analyzer.py --sample")
+        print("Usage: uv run src/analyzer.py <capture.json>")
+        print("       uv run src/analyzer.py --sample")
         return
-    
+
     analyzer.print_analysis()
-    
+
     if args.output:
         results = {
             "structure": analyzer.analyze_structure(),
@@ -362,5 +362,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+    main()

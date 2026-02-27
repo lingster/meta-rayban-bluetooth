@@ -24,14 +24,11 @@ Tools for discovering, connecting to, and reverse engineering the Bluetooth prot
 git clone https://github.com/lingster/meta-rayban-bluetooth.git
 cd meta-rayban-bluetooth
 
-# Create virtual environment (recommended)
-python -m venv venv
-source venv/bin/activate  # Linux/macOS
-# or: venv\Scripts\activate  # Windows
-
-# Install dependencies
-pip install -r requirements.txt
+# Install dependencies with uv
+uv sync
 ```
+
+> **Note**: If you don't have `uv` installed, see [uv installation docs](https://docs.astral.sh/uv/getting-started/installation/).
 
 ### Linux Setup
 
@@ -54,61 +51,61 @@ sudo usermod -aG bluetooth $USER
 
 ```bash
 # Basic scan (30 seconds)
-python src/scanner.py
+uv run src/scanner.py
 
 # Extended scan with verbose output
-python src/scanner.py -d 60 -v
+uv run src/scanner.py -d 60 -v
 
 # Include Classic Bluetooth (requires pybluez)
-python src/scanner.py --classic
+uv run src/scanner.py --classic
 
 # Save results to file
-python src/scanner.py -o scan_results.json
+uv run src/scanner.py -o scan_results.json
 ```
 
 ### 2. Explore GATT Services
 
 ```bash
 # Connect and enumerate services
-python src/explorer.py AA:BB:CC:DD:EE:FF
+uv run src/explorer.py AA:BB:CC:DD:EE:FF
 
 # Verbose output (include descriptors)
-python src/explorer.py AA:BB:CC:DD:EE:FF -v
+uv run src/explorer.py AA:BB:CC:DD:EE:FF -v
 
 # Subscribe to notifications for 60 seconds
-python src/explorer.py AA:BB:CC:DD:EE:FF -n 60
+uv run src/explorer.py AA:BB:CC:DD:EE:FF -n 60
 
 # Save device profile
-python src/explorer.py AA:BB:CC:DD:EE:FF -o profile.json
+uv run src/explorer.py AA:BB:CC:DD:EE:FF -o profile.json
 
 # Write to a characteristic
-python src/explorer.py AA:BB:CC:DD:EE:FF -w <uuid> <hex_data>
+uv run src/explorer.py AA:BB:CC:DD:EE:FF -w <uuid> <hex_data>
 ```
 
 ### 3. Monitor Traffic
 
 ```bash
 # Monitor notifications (save to capture.json)
-python src/monitor.py AA:BB:CC:DD:EE:FF
+uv run src/monitor.py AA:BB:CC:DD:EE:FF
 
 # Monitor for 5 minutes
-python src/monitor.py AA:BB:CC:DD:EE:FF -d 300
+uv run src/monitor.py AA:BB:CC:DD:EE:FF -d 300
 
 # Interactive mode (send commands)
-python src/monitor.py AA:BB:CC:DD:EE:FF -i
+uv run src/monitor.py AA:BB:CC:DD:EE:FF -i
 ```
 
 ### 4. Analyze Captured Data
 
 ```bash
 # Analyze a capture file
-python src/analyzer.py capture.json
+uv run src/analyzer.py capture.json
 
 # Create and analyze sample data
-python src/analyzer.py --sample
+uv run src/analyzer.py --sample
 
 # Save analysis to file
-python src/analyzer.py capture.json -o analysis.json
+uv run src/analyzer.py capture.json -o analysis.json
 ```
 
 ## Project Structure
@@ -125,7 +122,8 @@ meta-rayban-bluetooth/
 │   ├── monitor.py      # Real-time capture
 │   └── analyzer.py     # Packet analysis
 ├── tools/              # Additional utilities
-├── requirements.txt
+├── pyproject.toml
+├── uv.lock
 └── README.md
 ```
 
