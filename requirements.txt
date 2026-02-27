@@ -1,0 +1,8 @@
+# Core BLE library (cross-platform)
+bleak>=0.21.0
+
+# Optional: Classic Bluetooth support (Linux)
+# pybluez>=0.23
+
+# Optional: System D-Bus access (Linux BlueZ)
+# dbus-python>=1.3.2
