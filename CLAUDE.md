@@ -1,5 +1,9 @@
 # Meta Ray-Ban Bluetooth Tools
 
+## Coding standards
+Use SOLID and DRY coding principals
+make use of python + typer to create cli utils
+
 ## Project Overview
 
 Tools for discovering, connecting to, and reverse engineering the Bluetooth protocol of Meta Ray-Ban smart glasses. Uses `bleak` (async BLE library) as the primary dependency.
@@ -15,6 +19,7 @@ Tools for discovering, connecting to, and reverse engineering the Bluetooth prot
 - `01-bluetooth-fundamentals.md` - Bluetooth protocol reference: Classic vs BLE, protocol stack, addressing, pairing/bonding, security modes, frequency hopping, and connection states.
 - `02-bluetooth-discovery.md` - Device discovery mechanics: Classic inquiry process, BLE advertising/scanning, SDP, GATT discovery, AD types, and Python discovery examples using bleak.
 - `03-meta-rayban-glasses.md` - Meta Ray-Ban specific info: hardware specs, expected BLE services/UUIDs, speculated command protocol (TLV format), Meta View app details, and reverse engineering approach.
+- `04-audio-retrieval.md` - Audio retrieval findings: DAT SDK analysis (audio not yet public), VisionClaw audio pipeline (16kHz PCM via system APIs), comparison of approaches, and recommendations for Python-based capture.
 
 ## Source Files (src/)
 
@@ -23,6 +28,8 @@ Tools for discovering, connecting to, and reverse engineering the Bluetooth prot
 - `explorer.py` - GATT service/characteristic enumeration with optional notification subscription and characteristic writes
 - `monitor.py` - Real-time BLE notification capture with optional interactive mode
 - `analyzer.py` - Parses captured packet data to identify protocol patterns
+- `recorder.py` - Audio capture from glasses microphone (paired via macOS Classic BT) with MP3 encoding; uses typer CLI
+- `audio_sniff.py` - Audio protocol reverse-engineering: passive BLE ad monitoring, notification sniffing, and HCI capture guide; uses typer CLI
 
 ## Key Constants
 
