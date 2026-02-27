@@ -26,13 +26,15 @@ except ImportError:
 META_COMPANY_IDS = {
     0x0397,  # Meta Platforms, Inc.
     0x0157,  # Facebook, Inc. (older)
+    0x01AB,  # Meta Platforms (Ray-Ban Meta glasses)
 }
 
 # Ray-Ban glasses name patterns
 RAYBAN_NAME_PATTERNS = [
     "ray-ban",
-    "rayban", 
+    "rayban",
     "ray ban",
+    "rb meta",
     "stories",
     "meta",
 ]

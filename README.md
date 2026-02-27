@@ -45,6 +45,17 @@ sudo usermod -aG bluetooth $USER
 # Log out and back in
 ```
 
+## Enabling Bluetooth Pairing Mode
+
+Before scanning, you need to put your glasses into Bluetooth pairing mode:
+
+1. Place the glasses in the charging case
+2. Press and hold the button on the back of the case for 5 seconds
+3. Wait until the LED light on the case turns blue
+4. The glasses are now in pairing/discoverable mode and ready to be scanned
+
+> **Note**: On macOS, device addresses appear as CoreBluetooth UUIDs (e.g. `3B07C626-8BC4-...`) rather than MAC addresses (`XX:XX:XX:XX:XX:XX`). The glasses advertise as **"RB Meta"** followed by a model identifier.
+
 ## Usage
 
 ### 1. Scan for Devices
@@ -66,33 +77,33 @@ uv run src/scanner.py -o scan_results.json
 ### 2. Explore GATT Services
 
 ```bash
-# Connect and enumerate services
-uv run src/explorer.py AA:BB:CC:DD:EE:FF
+# Connect and enumerate services (use address from scanner output)
+uv run src/explorer.py <DEVICE_ADDRESS>
 
 # Verbose output (include descriptors)
-uv run src/explorer.py AA:BB:CC:DD:EE:FF -v
+uv run src/explorer.py <DEVICE_ADDRESS> -v
 
 # Subscribe to notifications for 60 seconds
-uv run src/explorer.py AA:BB:CC:DD:EE:FF -n 60
+uv run src/explorer.py <DEVICE_ADDRESS> -n 60
 
 # Save device profile
-uv run src/explorer.py AA:BB:CC:DD:EE:FF -o profile.json
+uv run src/explorer.py <DEVICE_ADDRESS> -o profile.json
 
 # Write to a characteristic
-uv run src/explorer.py AA:BB:CC:DD:EE:FF -w <uuid> <hex_data>
+uv run src/explorer.py <DEVICE_ADDRESS> -w <uuid> <hex_data>
 ```
 
 ### 3. Monitor Traffic
 
 ```bash
 # Monitor notifications (save to capture.json)
-uv run src/monitor.py AA:BB:CC:DD:EE:FF
+uv run src/monitor.py <DEVICE_ADDRESS>
 
 # Monitor for 5 minutes
-uv run src/monitor.py AA:BB:CC:DD:EE:FF -d 300
+uv run src/monitor.py <DEVICE_ADDRESS> -d 300
 
 # Interactive mode (send commands)
-uv run src/monitor.py AA:BB:CC:DD:EE:FF -i
+uv run src/monitor.py <DEVICE_ADDRESS> -i
 ```
 
 ### 4. Analyze Captured Data
@@ -117,6 +128,7 @@ meta-rayban-bluetooth/
 │   ├── 02-bluetooth-discovery.md
 │   └── 03-meta-rayban-glasses.md
 ├── src/
+│   ├── compat.py       # Platform utilities (macOS/Linux)
 │   ├── scanner.py      # Device discovery
 │   ├── explorer.py     # GATT enumeration
 │   ├── monitor.py      # Real-time capture
@@ -142,12 +154,13 @@ meta-rayban-bluetooth/
 - Look for consistent prefixes that might be command IDs
 - Monitor battery level characteristic for validation
 
-## Known Services (To Be Documented)
+## Known Services
 
 | UUID | Description | Notes |
 |------|-------------|-------|
 | 0x180A | Device Information | Standard |
 | 0x180F | Battery Service | Standard |
+| 0xFD5F | Meta Proprietary | Observed in BLE advertising |
 | TBD | Camera Control | Proprietary |
 | TBD | Voice Assistant | Proprietary |
 

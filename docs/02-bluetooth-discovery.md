@@ -242,16 +242,23 @@ asyncio.run(discover())
 
 ### By Name Pattern
 ```python
-devices = [d for d in all_devices if d.name and "Ray-Ban" in d.name]
+# Ray-Ban Meta glasses advertise as "RB Meta <model>" (e.g. "RB Meta 005G")
+PATTERNS = ["ray-ban", "rayban", "rb meta", "meta", "stories"]
+devices = [d for d in all_devices
+           if d.name and any(p in d.name.lower() for p in PATTERNS)]
 ```
 
 ### By Manufacturer ID
 ```python
-# Meta/Facebook company ID: 0x0397 (919)
-META_COMPANY_ID = 0x0397
+# Known Meta/Facebook company IDs
+META_COMPANY_IDS = {
+    0x0397,  # Meta Platforms, Inc.
+    0x0157,  # Facebook, Inc. (older)
+    0x01AB,  # Meta Platforms (observed on Ray-Ban Meta glasses)
+}
 
-devices = [d for d in all_devices 
-           if META_COMPANY_ID in d.metadata.get("manufacturer_data", {})]
+devices = [d for d in all_devices
+           if META_COMPANY_IDS & set(d.metadata.get("manufacturer_data", {}).keys())]
 ```
 
 ### By Service UUID

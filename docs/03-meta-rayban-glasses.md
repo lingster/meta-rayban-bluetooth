@@ -48,20 +48,33 @@ The glasses likely implement:
 | Battery Service | 0x180F | Battery level |
 | Proprietary | Custom 128-bit | Meta-specific features |
 
+## Enabling Bluetooth Pairing Mode
+
+To make the glasses discoverable for BLE scanning:
+
+1. Place the glasses in the charging case
+2. Press and hold the button on the back of the case for 5 seconds
+3. Wait until the LED light on the case turns blue
+4. The glasses are now in pairing/discoverable mode
+
 ## Device Identification
 
 ### Bluetooth Name Patterns
 - "Ray-Ban Stories" (1st gen)
 - "Ray-Ban | Meta" (2nd gen)
-- May include model suffix
+- **"RB Meta 005G"** (observed, 2nd gen — model suffix varies)
 
 ### Manufacturer Data
-- Company ID: 0x0397 (Meta Platforms, Inc.)
-- Payload contains device-specific data
+- Company ID: **`0x01AB`** (observed on Ray-Ban Meta glasses)
+- Company ID: `0x0397` (Meta Platforms, Inc. — registered)
+- Company ID: `0x0157` (Facebook, Inc. — legacy)
+- Example payload: `020103b2c5fc1d08bb01` (10 bytes)
 
-### Possible MAC Address Prefixes (OUI)
-Meta/Facebook may use various OUIs. Common ones:
-- Check IEEE OUI database for "Meta" or "Facebook"
+### Advertised Service UUIDs
+- **`0000fd5f-0000-1000-8000-00805f9b34fb`** (observed during BLE advertising)
+
+### Addressing on macOS
+On macOS, CoreBluetooth does not expose hardware MAC addresses. Instead, devices are identified by CoreBluetooth UUIDs (e.g. `3B07C626-8BC4-0545-9F27-93137792C31A`). These UUIDs are stable per-device on a given Mac but differ across machines.
 
 ## Expected GATT Services
 
@@ -138,7 +151,10 @@ Likely uses a TLV (Type-Length-Value) or similar format:
 
 ### 1. Passive Discovery
 ```bash
-# Scan for the glasses
+# Scan for the glasses (using this project's scanner)
+uv run src/scanner.py -d 20 -v
+
+# Or using system tools (Linux)
 sudo hcitool lescan
 sudo bluetoothctl scan on
 ```
@@ -167,14 +183,15 @@ async with BleakClient(address) as client:
 - Look for Bluetooth UUIDs
 - Find command definitions
 
-## Known UUIDs (To Discover)
+## Discovered UUIDs
 
-| UUID | Description |
-|------|-------------|
-| TBD | Control service |
-| TBD | Status notifications |
-| TBD | Camera control |
-| TBD | Audio settings |
+| UUID | Description | Source |
+|------|-------------|--------|
+| `0000fd5f-0000-1000-8000-00805f9b34fb` | Advertised service (purpose TBD) | BLE advertising |
+| TBD | Control service | Not yet discovered |
+| TBD | Status notifications | Not yet discovered |
+| TBD | Camera control | Not yet discovered |
+| TBD | Audio settings | Not yet discovered |
 
 ## Security Notes
 

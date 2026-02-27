@@ -26,5 +26,8 @@ Tools for discovering, connecting to, and reverse engineering the Bluetooth prot
 
 ## Key Constants
 
-- Meta company IDs: `0x0397` (Meta Platforms), `0x0157` (Facebook legacy)
-- Name patterns: "Ray-Ban", "Meta"
+- Meta company IDs: `0x01AB` (observed on Ray-Ban Meta), `0x0397` (Meta Platforms), `0x0157` (Facebook legacy)
+- Name patterns: "Ray-Ban", "RB Meta", "Meta", "Stories"
+- Advertised service UUID: `0000fd5f-0000-1000-8000-00805f9b34fb`
+- Observed device name: "RB Meta 005G"
+- Observed manufacturer data: `020103b2c5fc1d08bb01` (10 bytes, company `0x01AB`)
